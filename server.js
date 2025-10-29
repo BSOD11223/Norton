@@ -1,74 +1,102 @@
-// Load dependencies
+// -------------------- IMPORTS --------------------
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config();
+const bodyParser = require('body-parser');
+require('dotenv').config(); // Load .env locally
 
-// Create app
 const app = express();
 
-// Middleware
-app.use(express.static('public'));
-app.use(express.json());
+// -------------------- MIDDLEWARE --------------------
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Server port
-const PORT = process.env.PORT || 3000;
+// -------------------- MONGODB CONNECTION --------------------
+const mongoUri = process.env.MONGO_URI;
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
 .then(() => console.log("MongoDB connected"))
-.catch(err => console.error(err));
+.catch(err => console.error("MongoDB connection error:", err));
 
-// Define Message Schema
+// -------------------- SCHEMA --------------------
 const messageSchema = new mongoose.Schema({
   userId: String,
   name: String,
   text: String,
-  from: String,           // "user" or "admin"
-  timestamp: { type: Date, default: Date.now }
+  from: String, // 'user' or 'admin'
+  timestamp: { type: Date, default: Date.now },
+  seen: { type: Boolean, default: false }
 });
 
-// Create Message model
 const Message = mongoose.model('Message', messageSchema);
 
-// API route: send message
-app.post('/api/messages', async (req, res) => {
-  try {
-    const { userId, name, text, from } = req.body;
-    if (!text || !userId || !from) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
+// -------------------- ROUTES --------------------
 
-    const msg = new Message({ userId, name, text, from });
-    await msg.save();
-    res.json(msg);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// API route: get messages for a user
+// Get messages for a specific user
 app.get('/api/messages', async (req, res) => {
-  try {
-    const { userId } = req.query;
-    if (!userId) return res.status(400).json({ error: "Missing userId" });
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).json({ error: "Missing userId" });
 
+  try {
     const messages = await Message.find({ userId }).sort({ timestamp: 1 });
     res.json(messages);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// Catch-all route to serve frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+// Send a new message
+app.post('/api/messages', async (req, res) => {
+  const { userId, name, text, from } = req.body;
+  if (!userId || !text || !from) return res.status(400).json({ error: "Missing fields" });
+
+  try {
+    const message = new Message({ userId, name, text, from });
+    await message.save();
+    res.json(message);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Start server
+// Get all users for admin page
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await Message.aggregate([
+      { $group: { _id: "$userId", lastMessage: { $last: "$$ROOT" } } },
+      { $sort: { "lastMessage.timestamp": -1 } }
+    ]);
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Mark messages as seen
+app.post('/api/messages/seen', async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: "Missing userId" });
+
+  try {
+    await Message.updateMany({ userId, seen: false }, { seen: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Serve frontend files
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+// -------------------- START SERVER --------------------
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
