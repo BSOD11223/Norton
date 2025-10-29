@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact Portal</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="hero">
+    <div class="hero-content">
+      <h1 id="site-title">Real-time communication</h1>
+      <p class="subtitle">Welcome — send us a message anytime.</p>
+    </div>
+  </main>
+
+  <!-- Chat box bottom-right -->
+  <div id="chat-box" class="chat-box hidden" role="dialog">
+    <div class="chat-header">
+      Live Chat Support
+      <span id="close-chat" class="close-btn">&times;</span>
+    </div>
+
+    <div id="conversation" class="conversation"></div>
+
+    <div class="chat-input-area">
+      <input id="user-name" placeholder="Your name (optional)" />
+      <textarea id="user-text" placeholder="Type a message..." rows="2"></textarea>
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script src="/user.js"></script>
+</body>
+</html>

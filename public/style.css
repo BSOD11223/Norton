@@ -1,0 +1,260 @@
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, Arial, sans-serif; }
+
+/* ==================== USER PAGE ==================== */
+/* Hero / Background */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem;
+}
+
+/* Desktop Background */
+.hero {
+  background-image: url('/images/desktop.png');
+}
+
+/* Mobile Background */
+@media (max-width: 768px) {
+  .hero {
+    background-image: url('/images/mobile.png');
+  }
+}
+
+.hero-content {
+  background: rgba(0,0,0,0.45);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+}
+
+#site-title { font-size: 2.2rem; margin-bottom: 0.5rem; }
+.subtitle { opacity: 0.9; }
+
+/* Chat box User Page */
+.hidden { display: none; }
+
+.chat-box {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 320px;
+  max-height: 420px;
+  background: white;
+  color: #070707;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+
+.chat-header {
+  background: #f7f565;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  font-size: 15px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.conversation {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  border-bottom: 1px solid #eee;
+}
+
+.chat-input-area {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-input-area textarea,
+.chat-input-area input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.chat-input-area button {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #111;
+  color: white;
+}
+
+.conversation .msg {
+  margin-bottom: 6px;
+  max-width: 85%;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.conversation .msg.user {
+  background: #e9f5ff;
+  text-align: left;
+}
+
+.conversation .msg.admin {
+  background: #f0f0f0;
+  text-align: right;
+  margin-left: auto;
+}
+
+/* ==================== ADMIN PAGE ==================== */
+.admin-header {
+  padding: 1rem;
+  background: #111;
+  color: #fff;
+}
+
+.admin-container {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  height: 80vh; /* Limit container height so scroll works */
+}
+
+/* User List */
+.user-list {
+  width: 220px;
+  background: #ecf1ef;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-y: auto;       /* Scrollable when many users */
+  max-height: 100%;       /* Limit height to container */
+}
+
+.user-list h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.user-list ul { 
+  list-style: none; 
+  margin-top: 0.5rem;
+}
+
+.user-list li {
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: 5px;
+}
+
+.user-list li.unseen {
+  font-weight: 700;
+  border-color: #a500ff;
+  background: #fff3ff;
+}
+
+/* Chat Area */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;           /* Fill container height */
+}
+
+#chat-header {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Messages container */
+#messages {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-y: auto;      /* Scrollable for long conversation */
+  flex: 1;               /* Fill remaining space */
+  border: 1px solid #eee;
+}
+
+/* Individual messages */
+.admin-messages .msg {
+  margin-bottom: 0.6rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+
+.admin-messages .msg.user {
+  background: #eef6ff;
+  text-align:left;
+}
+
+.admin-messages .msg.admin {
+  background: #f4f4f4;
+  text-align:right;
+}
+
+/* Admin input pinned at bottom */
+.admin-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-input textarea, 
+.admin-input input {
+  padding:0.6rem;
+  border-radius:6px;
+  border:1px solid #ddd;
+}
+
+.modal-actions {
+  display:flex;
+  gap:10px;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #111;
+  color: white;
+  cursor: pointer;
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+@media (max-width: 800px) {
+  .admin-container { flex-direction: column; height: auto; }
+  .user-list { width: 100%; order: 2; max-height: 200px; }
+  .chat-area { order: 1; height: auto; }
+}
+
+@media (max-width: 600px) {
+  .chat-box {
+    right: 10px;
+    bottom: 10px;
+    width: 90%;
+  }
+}

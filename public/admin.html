@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Contact Portal</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Support Panel</h1>
+    <p>Be careful.</p>
+  </header>
+
+  <div class="admin-container">
+    <aside class="user-list">
+      <h3>Users</h3>
+      <ul id="users"></ul>
+    </aside>
+
+    <section class="chat-area">
+      <div id="chat-header">Select a user</div>
+      <div id="messages" class="admin-messages"></div>
+
+      <div class="admin-input">
+        <input id="admin-name" placeholder="Admin name (optional)" />
+        <textarea id="admin-text" placeholder="Reply message..." rows="3"></textarea>
+        <div class="modal-actions">
+          <button id="admin-send">Send Reply</button>
+          <button id="mark-seen">Mark All Seen</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
